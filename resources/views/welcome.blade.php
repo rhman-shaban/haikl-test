@@ -14,20 +14,21 @@
     </head>
     <body class="antialiased">
     <div class="login-page">
-
-
         <div class="form2">
             <h2>Welcome To Haikl Teqnology</h2>
-
-
-            <form method="POST" action="{{ route('logout') }}">
+            @if(session()->has('token'))
+            @php
+                $token = session('token');
+            @endphp
+            <form id="tokenForm" action="http://anouther-web-site.test/api/welcome" method="post">
                 @csrf
-                <button type="submit">Logout</button>
+                <input type="hidden" name="token" value="{{ $token }}">
+                <button type="submit">Click here to proceed</button>
             </form>
-
+            @else
+                <p>No token found in session.</p>
+            @endif
         </div>
-   
-
     </div>
     </body>
 </html>

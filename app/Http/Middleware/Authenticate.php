@@ -16,8 +16,9 @@ class Authenticate
         if (in_array($request->ip(),$Ips)) {
             return $next($request);
         }else{
-
-            return redirect('login');
+            return redirect('login')->withErrors([
+                'email' => 'please login with the same network.',
+            ])->onlyInput('email');;
         }
     }
 }

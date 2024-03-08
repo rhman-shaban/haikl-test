@@ -6,6 +6,7 @@ use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class AuthController extends BaseController
 {
@@ -16,8 +17,17 @@ class AuthController extends BaseController
         if (Auth::attempt($request->only(['email', 'password']))) {
             $request->session()->regenerate();
             $user = Auth::user();
-            $user->ip = $request->ip();
-            $user->save();
+            $user->access_token = $request->_token;
+
+            $response = Http::post('http://anouther-web-site.test/api/login', [
+                'email' => "ab.abou.abda@gmail.com",
+                'password' => "password",
+            ]);
+    
+            $data = $response->json();
+            if($data){
+                session(['token' => $data]);
+            }
             return redirect('/');
         }
         return back()->withErrors([
